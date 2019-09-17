@@ -18,3 +18,5 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/unrolled/secure v0.0.0-20190103195806-76e6d4e9b90c
 )
+
+replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
