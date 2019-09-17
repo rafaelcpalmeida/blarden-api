@@ -1,0 +1,16 @@
+language: go
+
+env:
+  - GO_ENV=test
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database blarden_test;' -U postgres
+  - go get github.com/gobuffalo/buffalo/buffalo
+
+go_import_path: https://github.com/rafaelcpalmeida/blarden-api
+
+script:
+  - buffalo test
