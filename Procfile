@@ -1,2 +1,1 @@
-web: bin/blatler-api
-
+web: bin/app
