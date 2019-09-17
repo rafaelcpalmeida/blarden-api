@@ -24,7 +24,7 @@ jobs:
     - name: Get dependencies
       run: |
         go get -u github.com/gobuffalo/buffalo/buffalo
-        go get -v -t -d ./...
+        go get -t -v ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
