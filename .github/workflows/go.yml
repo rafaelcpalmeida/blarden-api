@@ -22,8 +22,8 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Get dependencies
-      run: go get -u github.com/gobuffalo/buffalo/buffalo
       run: |
+        go get -u github.com/gobuffalo/buffalo/buffalo
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
