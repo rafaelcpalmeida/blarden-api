@@ -6,6 +6,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
 
     - name: Set up Go 1.12
       uses: actions/setup-go@v1
@@ -26,6 +29,11 @@ jobs:
 
     - name: Build
       run: go build -v .
+      
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
+      with:
+        postgresql version: '11'
       
     - name: Run tests
       run: go test -v ./...
