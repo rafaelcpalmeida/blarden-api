@@ -1,22 +1,31 @@
+# use the latest ubuntu environment (18.04) available on travis
+dist: xenial
 language: go
-go:
-- 1.12.x
+# Force-enable Go modules. Also force go to use the code in vendor/
+# These will both be unnecessary when Go 1.13 lands.
 env:
-- GO_ENV=test GO111MODULE=on
-services:
-- postgresql
+  - GO111MODULE=on  GOFLAGS='-mod vendor'
+# You don't need to test on very old versions of the Go compiler. It's the user's
+# responsibility to keep their compiler up to date.
+go:
+  - 1.12.x
+# Only clone the most recent commit.
+git:
+depth: 1
+# Skip the install step. Don't `go get` dependencies. Only build with the code
+# in vendor/
+install: true
+# Don't email me the results of the test runs.
+notifications:
+email: false
+# Anything in before_script that returns a nonzero exit code will flunk the
+# build and immediately stop. It's sorta like having set -e enabled in bash.
+# Make sure golangci-lint is vendored.
 before_script:
-- psql -c 'create database blarden_test;' -U postgres
-- mkdir -p $TRAVIS_BUILD_DIR/public/assets
-go_import_path: blarden
-install:
-- go get github.com/gobuffalo/buffalo/buffalo
-- go get $(go list ./... | grep -v /vendor/)
-script: buffalo test
-deploy:
-  provider: heroku
-  api_key:
-    secure: VEnCwuyu+75EyjpK5rWcOZgWMEDRkJX9LCJgOWnvhAvu1mGRmGfkajKKLbPtUI7UEkoofZ0bKKReWPJlFXyvbLdtN27QhZoQGKjlb5thhd8widn/Cnp4rEc/YMxwpCTS/+CosEc3VYH8WlxsV2YMTli21bwJrvvg9oKykwvRiNK6GWtCLpmjR39D6gzo7b1K/giFcjeRQz+Y9qTuxpEjY+M5OqO+nXJaKENr1Z+oD5LkmHkHGO8vBCbrgIJeLKHKuq7mUxOx0J1s7L2T16+W8WpktDMf8KnIqjTLGZj/enqYyx84i6gPNT1YAWV6JIrPcnKpDBLCHxmrlpho0YBw9ie+2k53lT2z80NnVfm+HW8ObjOhGOxHjNW2nTICa5HOSjjqJfgbSXPJFjk5OBjq/yBazFFtmS0Yaib4TAmGwo3Em6sGwBCumYbat3bzuBTM/Ew/nZbx/IGI2NJtsHfo9ENKp0ldpcNVk+qgueQIac/U05/vtyBnUIWdQgcCvfnZSq1ETO+Qo7TGQ84NlN/AaLUscZrqiSFSLt4cqGYinT1w4u3mU32ACb4XuXZGMq1uZtzhyVO1woBkOeKakKw18YhPDvtO0+ExZsNCYt1D0EvRu8me5t66cz+8UUQTSN+FTIQYPapn+Ztnml9GjLVE0j6GYdEDNS4LiPWfMPr1BIw=
-  app: blarden
-  on:
-    repo: rafaelcpalmeida/blarden-api
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+# script always runs to completion (set +e). If we have linter issues AND a
+# failing test, we want to see both. Configure golangci-lint with a
+# .golangci.yml file at the top level of your repo.
+script:
+  - golangci-lint run       # run a bunch of code checkers/linters in parallel
+  - go test -v -race ./...  # Run all the tests with the race detector enabled
