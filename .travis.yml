@@ -1,22 +1,22 @@
 language: go
-
 go:
-  - "1.12.x"
-
+- 1.12.x
 env:
-  - GO_ENV=test GO111MODULE=on
-
+- GO_ENV=test GO111MODULE=on
 services:
-  - postgresql
-
+- postgresql
 before_script:
-  - psql -c 'create database blarden_test;' -U postgres
-  - mkdir -p $TRAVIS_BUILD_DIR/public/assets
-
+- psql -c 'create database blarden_test;' -U postgres
+- mkdir -p $TRAVIS_BUILD_DIR/public/assets
 go_import_path: blarden
-
 install:
-  - go get github.com/gobuffalo/buffalo/buffalo
-  - go get $(go list ./... | grep -v /vendor/)
-
+- go get github.com/gobuffalo/buffalo/buffalo
+- go get $(go list ./... | grep -v /vendor/)
 script: buffalo test
+deploy:
+  provider: heroku
+  api_key:
+    secure: VEnCwuyu+75EyjpK5rWcOZgWMEDRkJX9LCJgOWnvhAvu1mGRmGfkajKKLbPtUI7UEkoofZ0bKKReWPJlFXyvbLdtN27QhZoQGKjlb5thhd8widn/Cnp4rEc/YMxwpCTS/+CosEc3VYH8WlxsV2YMTli21bwJrvvg9oKykwvRiNK6GWtCLpmjR39D6gzo7b1K/giFcjeRQz+Y9qTuxpEjY+M5OqO+nXJaKENr1Z+oD5LkmHkHGO8vBCbrgIJeLKHKuq7mUxOx0J1s7L2T16+W8WpktDMf8KnIqjTLGZj/enqYyx84i6gPNT1YAWV6JIrPcnKpDBLCHxmrlpho0YBw9ie+2k53lT2z80NnVfm+HW8ObjOhGOxHjNW2nTICa5HOSjjqJfgbSXPJFjk5OBjq/yBazFFtmS0Yaib4TAmGwo3Em6sGwBCumYbat3bzuBTM/Ew/nZbx/IGI2NJtsHfo9ENKp0ldpcNVk+qgueQIac/U05/vtyBnUIWdQgcCvfnZSq1ETO+Qo7TGQ84NlN/AaLUscZrqiSFSLt4cqGYinT1w4u3mU32ACb4XuXZGMq1uZtzhyVO1woBkOeKakKw18YhPDvtO0+ExZsNCYt1D0EvRu8me5t66cz+8UUQTSN+FTIQYPapn+Ztnml9GjLVE0j6GYdEDNS4LiPWfMPr1BIw=
+  app: blarden
+  on:
+    repo: rafaelcpalmeida/blarden-api

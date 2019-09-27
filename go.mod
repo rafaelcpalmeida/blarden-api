@@ -12,7 +12,6 @@ require (
 	github.com/gobuffalo/packr/v2 v2.6.0
 	github.com/gobuffalo/pop v4.12.0+incompatible
 	github.com/gobuffalo/suite v2.8.2+incompatible
-	github.com/gobuffalo/uuid v2.0.5+incompatible
 	github.com/gobuffalo/validate v2.0.3+incompatible
 	github.com/gobuffalo/x v0.0.0-20190224155809-6bb134105960
 	github.com/gofrs/uuid v3.2.0+incompatible
