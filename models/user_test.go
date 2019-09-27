@@ -34,5 +34,5 @@ func Test_User(t *testing.T) {
 	          :-""-.`./-.'     /    `.___.'
 	                \ `t  ._  /  bug :F_P:
 	                 "-.t-._:'
-	 */
+	*/
 }

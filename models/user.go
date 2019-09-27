@@ -2,18 +2,20 @@ package models
 
 import (
 	"encoding/json"
+	"time"
+
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
 	"github.com/gofrs/uuid"
-	"time"
 )
+
 type User struct {
-    ID 				uuid.UUID 	`json:"id" db:"id"`
-    PhoneNumber 	string 		`json:"phone_number" db:"phone_number"`
-    HasPermission 	bool		`json:"has_permission" db:"has_permission"`
-    CreatedAt 		time.Time 	`json:"created_at" db:"created_at"`
-    UpdatedAt 		time.Time 	`json:"updated_at" db:"updated_at"`
+	ID            uuid.UUID `json:"id" db:"id"`
+	PhoneNumber   string    `json:"phone_number" db:"phone_number"`
+	HasPermission bool      `json:"has_permission" db:"has_permission"`
+	CreatedAt     time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // String is not required by pop and may be deleted
