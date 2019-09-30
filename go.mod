@@ -1,4 +1,4 @@
-module blarden
+module blarden-api
 
 go 1.13
 
