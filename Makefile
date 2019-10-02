@@ -6,14 +6,14 @@ docker-build:
 	@docker build -f Dev.Dockerfile . -t $(DOCKER_BUILD_IMAGE)
 
 docker-run:
-	@docker run -it --rm \
+	@docker run -it --rm --network "own-network" \
 	-v "$$(pwd):/app" \
 	-v ".go" \
 	-p $(API_PORT):$(API_PORT) \
 	-e PORT=$(API_PORT)	\
 	-e DEBUG="true" \
 	-e POSTGRESQL_DBNAME="blarden-api_development" \
-	-e POSTGRESQL_HOST="localhost" \
+	-e POSTGRESQL_HOST="postgresql" \
 	-e POSTGRESQL_USER="postgres" \
 	-e POSTGRESQL_PASSWORD="postgres" \
 	-e POSTGRESQL_PORT="5432" \
