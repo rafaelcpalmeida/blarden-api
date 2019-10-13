@@ -4,7 +4,7 @@ language: go
 go:
 - 1.13.x
 env:
-- GO_ENV=test GO111MODULE=on
+- GO_ENV=test GO111MODULE=on ALLOWED_PHONE_NUMBER='' INTERNAL_API_URL='' API2API_TOKEN='' AES_TOKEN=''
 services:
 - postgresql
 before_script:
