@@ -1,10 +1,12 @@
 package main
 
 import (
-	"blarden-api/api"
-	"blarden-api/api/users"
-	"blarden-api/db"
-	"blarden-api/db/models"
+	"blarden-api/src/api"
+	"blarden-api/src/api/door"
+	"blarden-api/src/api/users"
+	"blarden-api/src/db"
+	"blarden-api/src/db/models"
+	"blarden-api/src/middleware"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +20,8 @@ func main() {
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.GET("/", api.DefaultHandler)
+
+	router.GET("/open-door", middleware.CheckUserPermissions(), door.Open)
 
 	usersRoute := router.Group("/users")
 	{

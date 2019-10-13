@@ -1,8 +1,8 @@
 package users
 
 import (
-	"blarden-api/api"
-	"blarden-api/db/models"
+	"blarden-api/src/api"
+	"blarden-api/src/db/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
