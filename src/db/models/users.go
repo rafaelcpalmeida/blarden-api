@@ -1,7 +1,7 @@
 package models
 
 import (
-	db2 "blarden-api/src/db"
+	"blarden-api/src/db"
 	"errors"
 	"github.com/gofrs/uuid"
 	_ "github.com/jinzhu/gorm"
@@ -17,7 +17,7 @@ type User struct {
 func AllUsers() ([]User, error) {
 	var users []User
 
-	err := db2.DatabaseHandler().Find(&users).Error
+	err := db.DatabaseHandler().Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
@@ -26,13 +26,10 @@ func AllUsers() ([]User, error) {
 }
 
 func SpecificUser(id uuid.UUID) (User, error) {
-	var user User
+	user := specificUser(id)
 
-	user.ID = id
-
-	err := db2.DatabaseHandler().First(&user).Error
-	if err != nil {
-		return User{}, err
+	if id != user.ID {
+		return User{}, errors.New("unable to find user")
 	}
 
 	return user, nil
@@ -40,13 +37,13 @@ func SpecificUser(id uuid.UUID) (User, error) {
 
 func NewUser(user User) (User, error) {
 	var userCount int64
-	db2.DatabaseHandler().Model(User{}).Where("phone_number = ?", user.PhoneNumber).Count(&userCount)
+	db.DatabaseHandler().Model(User{}).Where("phone_number = ?", user.PhoneNumber).Count(&userCount)
 
 	if userCount >= 1 {
 		return User{}, errors.New("user is already registered")
 	}
 
-	err := db2.DatabaseHandler().Save(&user).Error
+	err := db.DatabaseHandler().Save(&user).Error
 
 	if err != nil {
 		return User{}, err
@@ -56,7 +53,7 @@ func NewUser(user User) (User, error) {
 }
 
 func UpdateUser(user User) (User, error) {
-	err := db2.DatabaseHandler().Debug().Save(&user).Error
+	err := db.DatabaseHandler().Save(&user).Error
 
 	if err != nil {
 		return User{}, err
@@ -66,17 +63,23 @@ func UpdateUser(user User) (User, error) {
 }
 
 func DeleteUser(id uuid.UUID) (bool, error) {
-	var user User
-
-	db2.DatabaseHandler().Debug().Where(&User{ID: id}).First(&user)
+	user := specificUser(id)
 
 	if id != user.ID {
 		return false, errors.New("unable to find user")
 	}
 
-	if err := db2.DatabaseHandler().Delete(&user).Error; err != nil {
+	if err := db.DatabaseHandler().Delete(&user).Error; err != nil {
 		return false, err
 	}
 
 	return true, nil
+}
+
+func specificUser(id uuid.UUID) User {
+	var user User
+
+	db.DatabaseHandler().Where(&User{ID: id}).First(&user)
+
+	return user
 }
