@@ -22,6 +22,8 @@ func SetupRouter() *gin.Engine {
 	router.GET("/", api.DefaultHandler)
 
 	router.GET("/open-door", middleware.CheckUserPermissions(), door.Open)
+	router.GET("/garage-gate", middleware.CheckUserPermissions(), door.GarageGate)
+	router.GET("/outside-gate", middleware.CheckUserPermissions(), door.OutsideGate)
 
 	usersRoute := router.Group("/users")
 	{

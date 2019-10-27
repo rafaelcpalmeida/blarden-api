@@ -14,7 +14,7 @@ type Response struct {
 	Status string `json:"status"`
 }
 
-func RequestOpenDoor() (Response, error) {
+func RequestOpenDoor(door string) (Response, error) {
 	internalAPIUrl := os.Getenv("INTERNAL_API_URL")
 	api2apiToken := os.Getenv("API2API_TOKEN")
 	aesToken := os.Getenv("AES_TOKEN")
@@ -33,7 +33,7 @@ func RequestOpenDoor() (Response, error) {
 		return Response{}, err
 	}
 
-	resp, err := http.Post(fmt.Sprintf("%s/open-door", internalAPIUrl), "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post(fmt.Sprintf("%s/%s", internalAPIUrl, door), "application/json", bytes.NewBuffer(requestBody))
 
 	if err != nil {
 		return Response{}, err
