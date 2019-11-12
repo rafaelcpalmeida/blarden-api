@@ -26,11 +26,12 @@ func SetupRouter() *gin.Engine {
 	router.GET("/outside-gate", middleware.CheckUserPermissions(), door.OutsideGate)
 
 	usersRoute := router.Group("/users")
+	usersRoute.Use(middleware.AdminPermissions())
 	{
 		usersRoute.GET("/", users.All)
 		usersRoute.GET("/:id", users.WithId)
 		usersRoute.POST("/", users.Create)
-		usersRoute.PUT("/:id", users.Update)
+		usersRoute.PATCH("/:id", users.Update)
 		usersRoute.DELETE("/:id", users.Delete)
 	}
 

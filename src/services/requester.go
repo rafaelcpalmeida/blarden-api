@@ -2,7 +2,6 @@ package services
 
 import (
 	"bytes"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -17,11 +16,8 @@ type Response struct {
 func RequestOpenDoor(door string) (Response, error) {
 	internalAPIUrl := os.Getenv("INTERNAL_API_URL")
 	api2apiToken := os.Getenv("API2API_TOKEN")
-	aesToken := os.Getenv("AES_TOKEN")
 
-	keyStr, _ := hex.DecodeString(aesToken)
-	var key [32]byte
-	copy(key[:], keyStr)
+	key := GetAESToken()
 
 	encrypted, _ := Encrypt([]byte(fmt.Sprintf("{\"key\": \"%s\", \"timestamp\": %d}", api2apiToken, time.Now().Unix())), &key)
 

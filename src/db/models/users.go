@@ -8,16 +8,19 @@ import (
 )
 
 type User struct {
-	ID            uuid.UUID `json:"id" gorm:"type:uuid;primary_key;"`
-	PhoneNumber   string    `json:"phone_number" gorm:"type:varchar(9);"`
-	HasPermission bool      `json:"has_permission" gorm:"type:bool"`
+	Id             uuid.UUID `json:"id" gorm:"type:uuid;primary_key;"`
+	PhoneNumber    string    `json:"phone_number" gorm:"type:varchar(9);"`
+	HasPermission  bool      `json:"has_permission" gorm:"type:bool"`
+	UserType       uint8     `json:"user_type" gorm:"default:3"`
+	UserUniqueKey  string    `json:"user_unique_key" gorm:"type:varchar(128);"`
+	AccountBlocked bool      `json:"account_blocked" gorm:"type:bool"`
 	Timestamps
 }
 
-func AllUsers() ([]User, error) {
+func AllUsers(queryParameters map[string]interface{}) ([]User, error) {
 	var users []User
 
-	err := db.DatabaseHandler().Find(&users).Error
+	err := db.DatabaseHandler().Where(queryParameters).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +31,7 @@ func AllUsers() ([]User, error) {
 func SpecificUser(id uuid.UUID) (User, error) {
 	user := specificUser(id)
 
-	if id != user.ID {
+	if id != user.Id {
 		return User{}, errors.New("unable to find user")
 	}
 
@@ -52,20 +55,27 @@ func NewUser(user User) (User, error) {
 	return user, nil
 }
 
-func UpdateUser(user User) (User, error) {
-	err := db.DatabaseHandler().Save(&user).Error
+func UpdateUser(id uuid.UUID, user User) (User, error) {
+	retrievedUser := specificUser(id)
+
+	if retrievedUser.Id != id {
+		return User{}, errors.New("unable to find user")
+	}
+
+	err := db.DatabaseHandler().Model(&user).Updates(map[string]interface{}{"has_permission": user.HasPermission,
+		"account_blocked": user.AccountBlocked}).Error
 
 	if err != nil {
 		return User{}, err
 	}
 
-	return user, nil
+	return specificUser(user.Id), nil
 }
 
 func DeleteUser(id uuid.UUID) (bool, error) {
 	user := specificUser(id)
 
-	if id != user.ID {
+	if id != user.Id {
 		return false, errors.New("unable to find user")
 	}
 
@@ -79,7 +89,7 @@ func DeleteUser(id uuid.UUID) (bool, error) {
 func specificUser(id uuid.UUID) User {
 	var user User
 
-	db.DatabaseHandler().Where(&User{ID: id}).First(&user)
+	db.DatabaseHandler().Where(&User{Id: id}).First(&user)
 
 	return user
 }
