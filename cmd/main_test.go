@@ -14,7 +14,7 @@ func performRequest(r http.Handler, method, path string) *httptest.ResponseRecor
 	return w
 }
 
-func TestHelloWorld(t *testing.T) {
+func TestAliveEndpoint(t *testing.T) {
 	// Build our expected body
 	body := "ALIVE"
 	// Grab our router
