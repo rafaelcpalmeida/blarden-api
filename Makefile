@@ -36,4 +36,4 @@ test:
 	-e DEBUG="true" \
 	-e TESTING="true" \
 	--name $(APP_NAME) \
-	-w /app $(DOCKER_BUILD_IMAGE) sh -c "go test ./..."
+	-w /app $(DOCKER_BUILD_IMAGE) sh -c "go test -cover ./..."
