@@ -2,7 +2,6 @@ package services
 
 import (
 	"bytes"
-	"os"
 	"reflect"
 	"testing"
 )
@@ -16,14 +15,6 @@ var validEncryptedString = []byte{242, 13, 178, 88, 15, 251, 179, 192, 23, 138, 
 var validDecryptedString = []byte{101, 110, 99, 114, 121, 112, 116, 101, 100, 32, 115, 116, 114, 105, 110, 103}
 
 func TestGetAESToken(t *testing.T) {
-	err := os.Setenv("AES_TOKEN", "7840a47a837c2f10c3caea9e8da950b90157bb43c512a4665860b171c1b8e618")
-
-	if err != nil {
-		t.Fatalf("Unable to set env variable. Error: %v", err)
-	} else {
-		t.Logf("Env variable set successfuly")
-	}
-
 	decodedCipher, err := GetAESToken()
 
 	if err != nil {
