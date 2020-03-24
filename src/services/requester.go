@@ -17,7 +17,11 @@ func RequestOpenDoor(door string) (Response, error) {
 	internalAPIUrl := os.Getenv("INTERNAL_API_URL")
 	api2apiToken := os.Getenv("API2API_TOKEN")
 
-	key := GetAESToken()
+	key, err := GetAESToken()
+
+	if err != nil {
+		return Response{}, err
+	}
 
 	encrypted, _ := Encrypt([]byte(fmt.Sprintf("{\"key\": \"%s\", \"timestamp\": %d}", api2apiToken, time.Now().Unix())), &key)
 

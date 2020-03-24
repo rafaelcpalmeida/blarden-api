@@ -60,14 +60,25 @@ func Create(c *gin.Context) {
 	}
 
 	createdUser, err := models.NewUser(user)
+
 	if err != nil {
 		api.ErrorResponse(c, "create_error", fmt.Sprintf("Unable to create the new user. Error: %s", err),
 			http.StatusBadRequest)
 		return
 	}
 
-	aesKey := services.GetAESToken()
-	encryptedUserKey, _ := services.Encrypt([]byte(createdUser.UserUniqueKey), &aesKey)
+	aesKey, err := services.GetAESToken()
+
+	if err != nil {
+		api.ErrorResponse(c, "Error", "Can't get encryption key. Check logs", http.StatusInternalServerError)
+	}
+
+	encryptedUserKey, err := services.Encrypt([]byte(createdUser.UserUniqueKey), &aesKey)
+
+
+	if err != nil {
+		api.ErrorResponse(c, "Error", "Can't encrypt user payload. Check logs", http.StatusInternalServerError)
+	}
 
 	createdUser.UserUniqueKey = hex.EncodeToString(encryptedUserKey)
 

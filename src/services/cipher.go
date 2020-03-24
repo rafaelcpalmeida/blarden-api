@@ -10,14 +10,19 @@ import (
 	"os"
 )
 
-func GetAESToken() [32]byte {
+func GetAESToken() ([32]byte, error) {
 	aesToken := os.Getenv("AES_TOKEN")
 
-	keyStr, _ := hex.DecodeString(aesToken)
+	keyStr, err := hex.DecodeString(aesToken)
 	var key [32]byte
+
+	if err != nil {
+		return key, err
+	}
+
 	copy(key[:], keyStr)
 
-	return key
+	return key, nil
 }
 
 func Encrypt(plaintext []byte, key *[32]byte) (cipherText []byte, err error) {
