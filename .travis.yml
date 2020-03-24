@@ -1,10 +1,10 @@
-# use the latest ubuntu environment (18.04) available on travis
 dist: xenial
 language: go
 go:
 - 1.13.x
 env:
-- GO_ENV=test GO111MODULE=on ALLOWED_PHONE_NUMBER=911111111 INTERNAL_API_URL='' API2API_TOKEN='' AES_TOKEN='' AES_TOKEN='7840a47a837c2f10c3caea9e8da950b90157bb43c512a4665860b171c1b8e618'
+- GO_ENV=test GO111MODULE=on ALLOWED_PHONE_NUMBER=911111111 INTERNAL_API_URL='' API2API_TOKEN=''
+  AES_TOKEN='' AES_TOKEN='7840a47a837c2f10c3caea9e8da950b90157bb43c512a4665860b171c1b8e618'
 services:
 - postgresql
 before_script:
@@ -13,3 +13,7 @@ go_import_path: blarden
 install:
 - go get ./...
 script: go test ./...
+deploy:
+  provider: heroku
+  api_key:
+    secure: cWjv9O0/Re00wHMcHlG0EITBiTMFC+oDeNaZSwG1zKvHzw3zQ9CHPM+UtAWQP6MPnm94vjJbsKeuAqXD4ZMpYzS5BCeNmvTi+njZu3crtRiLi7luuBIHR267IQUOdlRpxOW83CxuNrSnJDAeGxeGs9BRhT/iwWcb/AkJdA/XF7SCJ4xtw9s5vcOttLwc1bXHLzUsDH2zTSQ2vNELpzMBNvlkmty5K4X2NMVtxzm2lmUFoFbp5YTQT8sftIAtC0LG/tTrUrIvBmyoym52IYfPQJkRIIR9iKxIjzoKABhyFYEUh+ySrLrlJ01Vj2vDFP3i4c/obbc7gbQmCNroc+mA2ivOOuSwtEgjBPxTyQL4VZstO1tgg95uC77bLdxJRe8Wq5HUoj0QuP6Xy+FKSHYHt3c2QBdPhsuFa8VEGNAbUFVDh0FcbC5vLxcy+Q9iUrT8Sd+R/M2iULioTUeMWXj4sg8186gpwhnKFRko2WSmaJDPgzKI3YbtMql/5KyV8ZRZE49lFfHa5lFFOIUu7T6QldUD9cu0fBwouo+sb+Y28WSEgNFVIQLjfkQ0wGAO5j1FHzWUgM986Nc+lBQ/9zSEc6WsFrhT8q54NaoMbGCgQ6E7rV2mbZtdlmSMhdCfZNUaMNJOs7QykBjtRDX6JFiZPErk/ZcW6vxAKSPLTL46OpE=
